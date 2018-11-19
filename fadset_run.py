@@ -41,7 +41,12 @@ def set_cmems_surface_fieldset():
     filenames = {'U': fnames + 'uo.nc', 'V': fnames + 'vo.nc'}
     variables = {'U': 'uo', 'V': 'vo'}
     dimensions = {'lat': 'latitude', 'lon': 'longitude', 'time': 'time'}
-    return FieldSet.from_netcdf(filenames, variables, dimensions)
+    fset = FieldSet.from_netcdf(filenames, variables, dimensions)
+    fset.add_field(Field.from_netcdf('cmems_boundaryvelocities.nc', 'MaskUvel',
+                                     {'lon': 'Longitude', 'lat': 'Latitude'}, fieldtype='U'))
+    fset.add_field(Field.from_netcdf('cmems_boundaryvelocities.nc', 'MaskVvel',
+                                     {'lon': 'Longitude', 'lat': 'Latitude'}, fieldtype='V'))
+    return fset
 
 
 def set_cmems_50m_fieldset():
@@ -77,8 +82,8 @@ def createFADset(fieldset, datafile, nperid):
                       dtype={'names': ('id', 'date', 'lon', 'lat'),
                              'formats': (np.int, 'datetime64[D]', np.float, np.float)})
 
-    timerange = [np.timedelta64(int(fieldset.U.grid.time_full[0]), 's') + fieldset.U.grid.time_origin,
-                 np.timedelta64(int(fieldset.U.grid.time_full[-1]), 's') + fieldset.U.grid.time_origin]
+    timerange = [fieldset.U.grid.time_origin.fulltime(fieldset.U.grid.time_full[0]),
+                 fieldset.U.grid.time_origin.fulltime(fieldset.U.grid.time_full[-1])]
 
     fids = [f[0] for f in fads if timerange[0] < f[1] < timerange[-1]]
     date = [f[1] for f in fads if timerange[0] < f[1] < timerange[-1]]
@@ -147,4 +152,4 @@ def run_particles(fieldsetname):
 
 
 if __name__ == "__main__":
-    run_particles('cmems_50m')
+    run_particles('cmems_surface')
