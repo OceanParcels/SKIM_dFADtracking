@@ -1,0 +1,1 @@
+This repository holds the code for the publication "Regional connectivity and spatial densities of drifting fish aggregating devices, simulated from fishing events in the Western and Central Pacific Ocean", Scutt Phillips J, L Escalle, G Pilling, A Sen Gupta, E van Sebille (2019), Environmental Research Communications, in press (https://doi.org/10.1088/2515-7620/ab21e9)
